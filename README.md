@@ -1,6 +1,6 @@
-# F1 Telemetry End-To_End Pipeline
+# End-to-End Formula 1 Data Engineering Pipeline
 
-Data pipeline that extracts telemetry data from [fastf1](https://theoehrly-fast-f1.mintlify.app/introduction) api 
+An end-to-end batch data pipeline that ingests Formula 1 telemetry and race data from the [Fastf1](https://theoehrly-fast-f1.mintlify.app/introduction) API, stores raw data in a Bronze layer on [MinIO](https://www.min.io/), transforms it into curated Silver and Gold layers in [PostgreSQL](https://www.postgresql.org/docs/)
 
 ## architecture
 ![Architecture](image/architecture.png)
@@ -10,7 +10,6 @@ Project containerized through [Docker](https://www.docker.com/) and orchestrated
 pipeline workflow:
 1. extract data from [Fastf1](https://theoehrly-fast-f1.mintlify.app/introduction) api to generate bronze layer data
 2. Load bronze data to [MinIO](https://www.min.io/)
-3. Load bronze data to [PostgreSQL](https://www.postgresql.org/docs/)
-4. Initial data parsing and validation through Pydantic to generate silver data
-5. aggregated data for analytics
+3. Validate incoming records using [Pydantic](https://pypi.org/project/pydantic/) models before loading them into the Silver layer.
+4. generate star-schema analytical tables including race results, lap statistics, and telemetry metrics for dashboarding.
 
