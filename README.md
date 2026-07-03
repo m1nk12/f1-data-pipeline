@@ -2,7 +2,7 @@
 
 An end-to-end batch data pipeline that ingests Formula 1 telemetry and race data from the [Fastf1](https://theoehrly-fast-f1.mintlify.app/introduction) API, stores raw data in a Bronze layer on [MinIO](https://www.min.io/), transforms it into curated Silver and Gold layers in [PostgreSQL](https://www.postgresql.org/docs/)
 
-## architecture
+## Architecture
 ![Architecture](image/architecture.png)
 
 Project containerized through [Docker](https://www.docker.com/) and orchestrated through [Airflow](https://airflow.apache.org/)
