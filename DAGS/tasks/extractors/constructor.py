@@ -4,7 +4,7 @@ from clients.jolpica_client import JolpicaClient
 
 client = JolpicaClient()
 
-def fetch_constructor(season) -> pd.DataFrame:
+def fetch_constructor(season):
     """
     Fetches data for all constructors in a given season.
     
