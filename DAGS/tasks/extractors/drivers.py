@@ -5,7 +5,7 @@ from clients.jolpica_client import JolpicaClient
 
 client = JolpicaClient()
 
-def fetch_driver(season):
+def fetch_driver(season) -> pd.DataFrame:
     """
     Fetches data for all drivers in a given season.
 

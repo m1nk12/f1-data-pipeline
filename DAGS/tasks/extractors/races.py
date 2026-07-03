@@ -4,7 +4,7 @@ from clients.jolpica_client import JolpicaClient
 
 client = JolpicaClient()
 
-def fetch_race(season):
+def fetch_race(season) -> pd.DataFrame:
     """
     Fetches data for all races in a given season.
 
