@@ -1,4 +1,4 @@
-from clients.jolpica_client import JolpicaClient
+from client.jolpica_client import JolpicaClient
 import pandas as pd
 
 client = JolpicaClient()
