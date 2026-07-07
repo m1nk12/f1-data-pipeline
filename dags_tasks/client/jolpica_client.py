@@ -26,11 +26,11 @@ class JolpicaClient(BaseClient):
         """
         return self.get(f"{season}/races.json")
 
-    def get_results(self, season: int):
+    def get_results(self, season: int, round: int):
         """
         Get race results.
         """
-        return self.get(f"{season}/results.json")
+        return self.get(f"{season}/{round}/results.json")
 
     def get_qualifying(self, season: int, round: int):
         """
