@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from client.jolpica_client import JolpicaClient
+from dags_tasks.client.jolpica_client import JolpicaClient
 
 client = JolpicaClient()
 
@@ -15,7 +15,7 @@ def fetch_constructor(season) -> pd.DataFrame:
               Returns an empty list if no constructors are found for the season.
     """
     
-    data = client.get_constructors()
+    data = client.get_constructors(season)
     records = []
     constructors_data = data['MRData']['ConstructorTable']['Constructors']
 
