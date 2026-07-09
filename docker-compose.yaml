@@ -14,13 +14,11 @@ x-airflow-common: &airflow-common
     PYTHONPATH: /opt/airflow/project
   volumes:
     - ./dags:/opt/airflow/dags
-    - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
     - ./config:/opt/airflow/config
     - ./cache:/opt/airflow/cache
     - ./tmp:/opt/airflow/tmp
     - .:/opt/airflow/project
-  user: "${AIRFLOW_UID:-50000}:0"
 
 
 services:
@@ -79,19 +77,20 @@ services:
   airflow-init:
     <<: *airflow-common
     container_name: airflow-init
-    entrypoint: /bin/bash
     command:
+      - bash
       - -c
       - |
-        airflow db migrate &&
+        airflow db migrate
+
         airflow users create \
           --username airflow \
           --password airflow \
           --firstname Admin \
           --lastname User \
           --role Admin \
-          --email admin@example.com
-    user: "0:0"
+          --email admin@example.com || true
+    
   airflow-webserver:
     <<: *airflow-common
     container_name: airflow-webserver
