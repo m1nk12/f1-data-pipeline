@@ -1,7 +1,7 @@
 import fastf1
 import requests
 import pandas as pd
-from client.jolpica_client import JolpicaClient
+from dags_tasks.client.jolpica_client import JolpicaClient
 
 client = JolpicaClient()
 
@@ -23,16 +23,14 @@ def fetch_driver(season) -> pd.DataFrame:
 
     for driver in drivers:
 
-        records.append(
-            {
-                "driver_id": driver["driverId"],
-                "given_name": driver["givenName"],
-                "family_name": driver["familyName"],
-                "code": driver.get("code"),
-                "nationality": driver["nationality"],
-                "dob": driver["dateOfBirth"],
-            }
-        )
+        records.append({
+            "driver_id": driver.get("driverId"),
+            "given_name": driver.get("givenName"),
+            "family_name": driver.get("familyName"),
+            "code": driver.get("code"),
+            "nationality": driver.get("nationality"),
+            "dob": driver.get("dateOfBirth"),
+        })
 
     return pd.DataFrame(records)
     
