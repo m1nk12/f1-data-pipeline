@@ -95,14 +95,17 @@ def init_season_data():
 
         
     drivers_path = extract_drivers()
-    upload_drivers(drivers_path)
-    cleanup(drivers_path)
+    upload_drivers(drivers_path) >> cleanup(drivers_path)
+    
+    
     constructors_path = extract_constructors()
-    upload_constructors(constructors_path)
-    cleanup(constructors_path)
+    upload_constructors(constructors_path) >> cleanup(constructors_path)
+    
+    
     races_path = extract_races()
-    upload_races(races_path)
-    cleanup(races_path)
+    upload_races(races_path) >> cleanup(races_path)
+    
+    
 
 
 
