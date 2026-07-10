@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from airflow.decorators import dag, task
 from airflow.models.param import Param
-from airflow.decorators import get_current_context
+from airflow.operators.python import get_current_context
 
 from dags_tasks.tasks.extractors.drivers import fetch_driver
 from dags_tasks.tasks.extractors.constructor import fetch_constructor
