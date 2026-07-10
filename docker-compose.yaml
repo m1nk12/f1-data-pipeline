@@ -50,7 +50,7 @@ services:
     volumes:
       - postgres_data_warehouse:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgresadmin"]
+      test: ["CMD", "pg_isready", "-U", "postgresadmin","-d","f1_dw"]
       interval: 10s
       retries: 5
       start_period: 5s
