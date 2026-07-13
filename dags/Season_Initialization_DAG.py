@@ -4,11 +4,7 @@ from airflow.decorators import dag, task
 from airflow.models.param import Param
 from airflow.operators.python import get_current_context
 
-from dags_tasks.tasks.extractors.drivers import fetch_driver
-from dags_tasks.tasks.extractors.constructor import fetch_constructor
-from dags_tasks.tasks.extractors.races import fetch_race
-
-from storage.write_parquet import write_parquet
+from dags_util.extract import extract
 from storage.minio_client import upload_file
 
 from pathlib import Path
@@ -19,6 +15,8 @@ default_args = {
     "retries": 3,
     "retry_delay": timedelta(minutes = 5)
 }
+
+
 
 @dag(
     dag_id = "init_season_data",
@@ -38,12 +36,7 @@ def init_season_data():
         context = get_current_context()
         season = context["params"]["season"]
 
-        df = fetch_driver(season)
-
-        path = write_parquet(
-            df,
-            f"/opt/airflow/tmp/drivers/drivers_{season}.parquet"
-        )
+        path = extract("drivers",season)
         return path
     @task
     def upload_drivers(local_path):
@@ -57,11 +50,8 @@ def init_season_data():
     def extract_constructors():
         context = get_current_context()
         season = context["params"]["season"]
-        df = fetch_constructor(season)
-        path = write_parquet(
-            df,
-            f"/opt/airflow/tmp/constructors/constructors_{season}.parquet"
-        )
+
+        path = extract("constructors",season)
         return path
     @task
     def upload_constructors(local_path):
@@ -75,11 +65,8 @@ def init_season_data():
     def extract_races():
         context = get_current_context()
         season = context["params"]["season"]
-        df = fetch_race(season)
-        path = write_parquet(
-            df,
-            f"/opt/airflow/tmp/races/races_{season}.parquet"
-        )
+
+        path = extract("races",season)
         return path
     @task
     def upload_races(local_path):
