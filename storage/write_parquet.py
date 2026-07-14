@@ -3,7 +3,7 @@ import pyarrow.parquet as pq
 from pathlib import Path
 
 def write_parquet(df, path):
-    table = pa.Table.from_pandas(df, preserve_index = 0)
+    table = pa.Table.from_pandas(df, preserve_index = False)
 
     output_path = Path(path)
     
