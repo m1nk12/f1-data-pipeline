@@ -1,4 +1,7 @@
 from minio import Minio
+from io import BytesIO
+import pandas as pd
+
 client = Minio(
     "minio:9000",
     access_key = "minioadmin",
@@ -19,3 +22,22 @@ def upload_file(
         obj_name,
         file_path
     )
+
+def read_parquet_from_minio(
+    bucket_name,
+    object_name
+):
+    response = client.get_object(
+        bucket_name,
+        object_name
+    )
+
+    try:
+        df = pd.read_parquet(
+            BytesIO(response.read())
+        )
+        return df
+
+    finally:
+        response.close()
+        response.release_conn()
