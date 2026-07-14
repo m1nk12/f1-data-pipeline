@@ -5,3 +5,4 @@ pandas
 pyarrow
 Requests
 urllib3
+pydantic
