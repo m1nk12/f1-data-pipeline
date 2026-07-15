@@ -2,7 +2,7 @@ from dags_tasks.tasks.extractors.drivers import fetch_driver
 from dags_tasks.tasks.extractors.constructor import fetch_constructor
 from dags_tasks.tasks.extractors.races import fetch_race
 
-from data_model.bronze import Driver
+from data_model.bronze import Driver, Constructor
 
 from storage.write_parquet import write_parquet
 
@@ -19,6 +19,12 @@ def extract(data_extract,season):
         df = pd.DataFrame(validated)
     elif(data_extract == 'constructors'):
         df = fetch_constructor(season)
+        records = df.to_dict(orient = "records")
+
+        validated = [
+            Constructor.model_validate(record).model_dump()
+            for record in records
+        ]
     else:
         df = fetch_race(season)
     path = write_parquet(

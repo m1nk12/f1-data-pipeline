@@ -16,3 +16,18 @@ class Driver(BaseModel):
         if value is None:
             return value
         return value.upper()
+    
+class Constructor(BaseModel):
+    constructorId: str
+    name: str
+    nationality: str
+    @field_validator("name")
+    @classmethod
+    def snake_case(cls, value):
+        string = value.split()
+        res = ""
+        for idx in range(0, len(string)):
+            res += string[idx]
+            if(idx != len(string) - 1):
+                res += '_'
+        return res
