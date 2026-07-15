@@ -25,6 +25,7 @@ def extract(data_extract,season):
             Constructor.model_validate(record).model_dump()
             for record in records
         ]
+        df = pd.DataFrame(validated)
     else:
         df = fetch_race(season)
     path = write_parquet(
