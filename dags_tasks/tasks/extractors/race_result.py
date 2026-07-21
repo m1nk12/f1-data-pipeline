@@ -25,12 +25,11 @@ def fetch_race_result_data(season: int, round: int) -> pd.DataFrame:
 
     records = []
 
-    season = int(races["season"])
-    round = int(races["round"])
-    race_name = races["raceName"]
-    race_date = races["date"]
 
-    for result in races["Results"]:
+    race_name = races[0]["raceName"]
+    race_date = races[0]["date"]
+
+    for result in races[0]["Results"]:
 
         driver = result["Driver"]
         constructor = result["Constructor"]
