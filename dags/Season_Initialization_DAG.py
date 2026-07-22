@@ -5,7 +5,8 @@ from airflow.models.param import Param
 from airflow.operators.python import get_current_context
 
 from dags_util.extract import extract
-from storage.minio_client import upload_file
+from storage.minio_client import upload_file, read_parquet_from_minio
+from storage.postgres_client import load_parquet_to_postgres
 
 from pathlib import Path
 import os
@@ -79,18 +80,42 @@ def init_season_data():
     @task
     def cleanup(local_path): #clean up temporary file after upload to minIO
         os.remove(local_path)
+    @task
+    def push_from_minio_to_postgresql():
+        context = get_current_context()
+        season = context["params"]["season"]
 
+        race_df = read_parquet_from_minio("bronze", f"races/races_{season}.parquet")
+        constructor_df = read_parquet_from_minio("bronze", f"constructors/constructors_{season}.parquet")
+        driver_df = read_parquet_from_minio("bronze", f"drivers/drivers_{season}.parquet")
+
+
+        load_parquet_to_postgres(driver_df, "drivers", "silver")
+        load_parquet_to_postgres(constructor_df, "constructors", "silver")
+        load_parquet_to_postgres(race_df, "races", "silver")
         
     drivers_path = extract_drivers()
-    upload_drivers(drivers_path) >> cleanup(drivers_path)
-    
-    
+    drivers_upload = upload_drivers(drivers_path)
+    drivers_cleanup = cleanup(drivers_path)
+
     constructors_path = extract_constructors()
-    upload_constructors(constructors_path) >> cleanup(constructors_path)
-    
-    
+    constructors_upload = upload_constructors(constructors_path)
+    constructors_cleanup = cleanup(constructors_path)
+
     races_path = extract_races()
-    upload_races(races_path) >> cleanup(races_path)
+    races_upload = upload_races(races_path)
+    races_cleanup = cleanup(races_path)
+
+    
+    drivers_upload >> drivers_cleanup
+    constructors_upload >> constructors_cleanup
+    races_upload >> races_cleanup
+
+    push_tasks = push_from_minio_to_postgresql()
+
+    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_tasks
+
+
     
     
 
