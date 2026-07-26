@@ -90,9 +90,9 @@ def init_season_data():
         driver_df = read_parquet_from_minio("bronze", f"drivers/drivers_{season}.parquet")
 
 
-        load_parquet_to_postgres(driver_df, "drivers", "silver")
-        load_parquet_to_postgres(constructor_df, "constructors", "silver")
-        load_parquet_to_postgres(race_df, "races", "silver")
+        load_parquet_to_postgres(driver_df, "drivers", "bronze")
+        load_parquet_to_postgres(constructor_df, "constructors", "bronze")
+        load_parquet_to_postgres(race_df, "races", "bronze")
         
     drivers_path = extract_drivers()
     drivers_upload = upload_drivers(drivers_path)
