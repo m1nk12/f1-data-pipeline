@@ -1,8 +1,10 @@
-apache-airflow
 fastf1
 minio
 pandas
 pyarrow
+psycopg2-binary
 Requests
 urllib3
 pydantic
+dbt-core
+dbt-postgres
