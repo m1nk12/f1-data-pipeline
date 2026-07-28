@@ -1,5 +1,5 @@
 import pandas as pd
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator, Field, ConfigDict
 from datetime import timedelta
 import datetime
 
@@ -19,7 +19,12 @@ class Driver(BaseModel):
         return value.upper()
     
 class Constructor(BaseModel):
-    constructorId: str
+
+    model_config = ConfigDict(
+        populate_by_name = True
+    )
+
+    constructor_id: str = Field(alias = "constructorId")
     name: str
     nationality: str
     @field_validator("name")
