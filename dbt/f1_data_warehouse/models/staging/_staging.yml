@@ -6,7 +6,7 @@ sources:
     tables:
       - name: drivers
         columns:
-          - name: driveer_id
+          - name: driver_id
             tests:
               - not_null
               - unique

@@ -7,11 +7,11 @@ profile: f1_data_ware_house
 
 model-paths: ["models"]
 
-target-path: ["target"]
+target-path: target
 
 macro-paths: ["macros"]
 
-clean-target:
+clean-targets:
   - targets
   - dbt_packages
 
