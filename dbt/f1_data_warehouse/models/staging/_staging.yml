@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: bronze
+    schema: bronze
+    tables:
+      - name: drivers
+        columns:
+          - name: driveer_id
+            tests:
+              - not_null
+              - unique
+      - name: constructors
+        columns:
+          - name: constructor_id
+            tests:
+              - not_null
+              - unique
+      - name: races
+        columns:
+          - name: season
+            tests:
+              - not_null
+          - name: round
+            tests:
+              - not_null

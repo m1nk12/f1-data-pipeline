@@ -1,0 +1,13 @@
+f1_data_ware_house:
+  target: dev
+
+  outputs:
+    dev:
+      type: postgres
+      host: postgres_data_warehouse
+      user: postgresadmin
+      password: postgresadmin
+      port: 5432
+      dbname: f1_dw
+      schema: public
+      thread: 4

@@ -1,0 +1,25 @@
+name: f1_data_warehouse
+version: '1.0.0'
+
+config-version: 2
+
+profile: f1_data_ware_house
+
+model-paths: ["models"]
+
+target-path: ["target"]
+
+macro-paths: ["macros"]
+
+clean-target:
+  - targets
+  - dbt_packages
+
+models:
+  f1_data_warehouse:
+    staging:
+      +schema: silver
+      +materialized: view
+    marts:
+      +schema: gold
+      +materialized: table
