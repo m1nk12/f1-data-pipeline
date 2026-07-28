@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from airflow.decorators import dag, task
 from airflow.models.param import Param
 from airflow.operators.python import get_current_context
+from airflow.operators.bash import BashOperator
 
 from dags_util.extract import extract
 from storage.minio_client import upload_file, read_parquet_from_minio
@@ -113,7 +114,19 @@ def init_season_data():
 
     push_tasks = push_from_minio_to_postgresql()
 
-    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_tasks
+    dbt_build = BashOperator(
+        task_id = "dbt_build",
+        bash_command = """
+            set -e
+            cd /opt/airflow/project/dbt/f1_data_warehouse
+
+            dbt debug --profiles-dir .
+
+            dbt build --profiles-dir .
+        """
+    )
+
+    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_tasks >> dbt_build
 
 
     
