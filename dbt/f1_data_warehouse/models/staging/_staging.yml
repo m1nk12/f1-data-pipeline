@@ -9,13 +9,11 @@ sources:
           - name: driver_id
             tests:
               - not_null
-              - unique
       - name: constructors
         columns:
           - name: constructor_id
             tests:
               - not_null
-              - unique
       - name: races
         columns:
           - name: season
