@@ -122,11 +122,23 @@ def init_season_data():
 
             dbt debug --profiles-dir .
 
-            dbt build --profiles-dir .
+            dbt build --profiles-dir . --select stg_drivers stg_constructors stg_races
         """
     )
 
-    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_tasks >> dbt_build
+    mart_build = BashOperator(
+        task_id = "mart_build",
+        bash_command = """
+            set -e
+            cd opt/airflow/project/dbt/f1_data_warehouse
+
+            dbt debug --profiles-dir .
+
+            dbt build --profiles-dir . --select dim_drivers dim_constructors dim_races
+        """
+    )
+
+    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_tasks >> dbt_build >> mart_build
 
 
     
