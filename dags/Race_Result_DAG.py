@@ -2,8 +2,10 @@ from datetime import timedelta, datetime
 from dags_tasks.tasks.extractors.race_result import fetch_race_result_data
 from storage.write_parquet import write_parquet
 from storage.minio_client import upload_file
+from storage.postgres_client import load_parquet_to_postgres
 from data_model.bronze import Race_result
 
+from airflow.operators.bash import BashOperator
 from airflow.decorators import dag, task
 from airflow.models.param import Param
 
@@ -25,7 +27,7 @@ default_args = {
 @dag(
     dag_id = "get_race_result",
     start_date = pendulum.datetime(2026,1,1, tz = local_tz),
-    schedule_interval = '0 0 * * *',
+    schedule_interval = '0 * * * *',
     catchup = False,
     default_args = default_args,
     tags = ['incremental'],
@@ -36,7 +38,7 @@ def get_race_result():
     def check_race():
         sql = "select season, round " \
         "from gold.dim_races " \
-        "where date = CURRENT_DATE and time + '2:00' = CURRENT_TIME"
+        "where date = CURRENT_DATE and time + '3:00' >= CURRENT_TIME"
 
         df = pd.read_sql(sql,con = engine)
         if(df.empty):
@@ -71,6 +73,8 @@ def get_race_result():
             f"results/{season}/{Path(path).name}",
             path
         )
+
+        load_parquet_to_postgres(df, 'race_result', 'bronze')
     @task
     def end():
         print("end")
@@ -83,8 +87,20 @@ def get_race_result():
 
     finish = end()
 
+    dbt_build = BashOperator(
+        task_id = "dbt_build",
+        bash_command = """
+            set -e
+            cd /opt/airflow/project/dbt/f1_data_warehouse
+
+            dbt debug --profiles-dir .
+
+            dbt build --profiles-dir . --select stg_race_result
+        """
+    )
+
     race_info >> branch
-    branch >> [extract, finish]
+    branch >> [extract >> dbt_build, finish]
 
 
     

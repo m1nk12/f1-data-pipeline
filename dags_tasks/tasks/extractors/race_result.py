@@ -54,8 +54,7 @@ def fetch_race_result_data(season: int, round: int) -> pd.DataFrame:
                 "constructor_name": constructor.get("name"),
 
                 "grid": int(result["grid"]),
-                "position": int(result["position"]),
-                "position_text": result.get("positionText"),
+                "position": str(result["position"]),
                 "points": float(result["points"]),
                 "laps": int(result["laps"]),
 
