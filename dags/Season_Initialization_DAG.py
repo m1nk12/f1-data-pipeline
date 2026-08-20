@@ -94,6 +94,7 @@ def init_season_data():
         load_parquet_to_postgres(driver_df, "drivers", "bronze")
         load_parquet_to_postgres(constructor_df, "constructors", "bronze")
         load_parquet_to_postgres(race_df, "races", "bronze")
+
         
     drivers_path = extract_drivers()
     drivers_upload = upload_drivers(drivers_path)
@@ -112,25 +113,28 @@ def init_season_data():
     constructors_upload >> constructors_cleanup
     races_upload >> races_cleanup
 
-    push_tasks = push_from_minio_to_postgresql()
+    
+    push_task = push_from_minio_to_postgresql()
 
     dbt_build = BashOperator(
         task_id = "dbt_build",
-        bash_command = """
+        bash_command="""
             set -e
+
             cd /opt/airflow/project/dbt/f1_data_warehouse
 
             dbt debug --profiles-dir .
 
-            dbt build --profiles-dir . --select stg_drivers stg_constructors stg_races
+            dbt build --profiles-dir . --select stg_drivers stg_races stg_constructors
         """
     )
 
     mart_build = BashOperator(
         task_id = "mart_build",
-        bash_command = """
+        bash_command="""
             set -e
-            cd opt/airflow/project/dbt/f1_data_warehouse
+
+            cd /opt/airflow/project/dbt/f1_data_warehouse
 
             dbt debug --profiles-dir .
 
@@ -138,9 +142,9 @@ def init_season_data():
         """
     )
 
-    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_tasks >> dbt_build >> mart_build
 
 
+    [drivers_cleanup, constructors_cleanup, races_cleanup] >> push_task >> dbt_build >> mart_build
     
     
 

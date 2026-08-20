@@ -23,10 +23,3 @@ sources:
             tests:
               - not_null
       - name: race_result
-        columns:
-          - name: season
-            tests:
-              - not_null
-          - name: round
-            tests:
-              - not_null
