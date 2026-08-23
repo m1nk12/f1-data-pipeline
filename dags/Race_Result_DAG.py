@@ -36,10 +36,12 @@ default_args = {
 def get_race_result():
     @task
     def check_race():
-        sql = "select season, round " \
-        "from gold.dim_races " \
-        "where date = CURRENT_DATE and time + '3:00' >= CURRENT_TIME"
-
+        sql = "SELECT season, round " \
+                "FROM gold.dim_races " \
+                "WHERE (date + time) " \
+                "BETWEEN (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '24 hours' " \
+                "AND (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '4 hours'"
+        
         df = pd.read_sql(sql,con = engine)
         if(df.empty):
             return None
@@ -100,7 +102,9 @@ def get_race_result():
     )
 
     race_info >> branch
-    branch >> [extract >> dbt_build, finish]
+    branch >> extract
+    branch >> finish
+    extract >> dbt_build
 
 
     
