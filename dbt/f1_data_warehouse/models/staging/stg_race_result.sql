@@ -31,6 +31,7 @@ select
     race_time,
     fastest_lap_rank,
     fastest_lap_number,
-    fastest_lap_time
+    fastest_lap_time,
+    CURRENT_TIME as time_stamp
 from deduplicate
 order by position

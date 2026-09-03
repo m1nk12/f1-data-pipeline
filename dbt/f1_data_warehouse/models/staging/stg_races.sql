@@ -22,5 +22,6 @@ SELECT
     round,
     name,
     date,
-    time
+    time,
+    CURRENT_TIME as time_stamp
 from deduplicate

@@ -22,5 +22,6 @@ select
     family_name,
     code,
     nationality,
-    dob
+    dob,
+    CURRENT_TIME as time_stamp
 from deduplicate

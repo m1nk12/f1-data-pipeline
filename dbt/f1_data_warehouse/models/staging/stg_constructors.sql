@@ -18,5 +18,6 @@ deduplicate as (
 SELECT
     constructor_id,
     name as team_name,
-    nationality
+    nationality,
+    CURRENT_TIME as time_stamp
 from deduplicate
