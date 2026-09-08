@@ -20,7 +20,7 @@ deduplicate as (
 SELECT
     season,
     round,
-    name,
+    name as race_name,
     date,
     time,
     CURRENT_TIME as time_stamp
