@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: fct_race_result
+    columns:
+      - name: race_name
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_races')
+              field: race_name
+      - name: season
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_races')
+              field: season
+      - name: round
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_races')
+              field: round
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_drivers')
+              field: driver_id
+      - name: constructor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_constructors')
+              field: constructor_id

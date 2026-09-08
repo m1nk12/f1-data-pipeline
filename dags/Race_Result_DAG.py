@@ -38,9 +38,7 @@ def get_race_result():
     def check_race():
         sql = "SELECT season, round " \
                 "FROM gold.dim_races " \
-                "WHERE (date + time) " \
-                "BETWEEN (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '24 hours' " \
-                "AND (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '4 hours'"
+                "WHERE date = '2024-03-02' and time = '22:00:00'"
         
         df = pd.read_sql(sql,con = engine)
         if(df.empty):
@@ -101,10 +99,23 @@ def get_race_result():
         """
     )
 
+    gold_layer_build = BashOperator(
+        task_id = "gold_layer_build",
+        bash_command = """
+            set -e
+            cd /opt/airflow/project/dbt/f1_data_warehouse
+
+            dbt debug --profiles-dir .
+
+            dbt build --profiles-dir . --select fct_race_result
+        """
+    )
+
     race_info >> branch
     branch >> extract
     branch >> finish
-    extract >> dbt_build
+    dbt_job = dbt_build >> gold_layer_build
+    extract >> dbt_job
 
 
     

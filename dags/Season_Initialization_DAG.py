@@ -125,11 +125,11 @@ def init_season_data():
 
             dbt debug --profiles-dir .
 
-            dbt build --profiles-dir . --select stg_drivers stg_races stg_constructors
+            dbt run --profiles-dir . --select stg_drivers stg_races stg_constructors
         """
     )
 
-    mart_build = BashOperator(
+    mart_build = BashOperator(  #switch from build to run because if using build the fct_race_result table will get built too --> error
         task_id = "mart_build",
         bash_command="""
             set -e
@@ -138,7 +138,7 @@ def init_season_data():
 
             dbt debug --profiles-dir .
 
-            dbt build --profiles-dir . --select dim_drivers dim_constructors dim_races
+            dbt run --profiles-dir . --select dim_drivers dim_constructors dim_races
         """
     )
 
