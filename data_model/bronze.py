@@ -85,3 +85,13 @@ class Race_result(BaseModel):
     fastest_lap_rank: str | None
     fastest_lap_number: str | None
     fastest_lap_time: str | None
+    @field_validator('race_name')
+    @classmethod
+    def snake_case(cls, value):
+        res = ""
+        string = value.split()
+        for idx in range(0, len(string)):
+            res += string[idx]
+            if(idx != len(string) - 1):
+                res += '_'
+        return res
