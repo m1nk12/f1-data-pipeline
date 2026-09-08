@@ -115,8 +115,8 @@ def get_race_result():
     race_info >> branch
     branch >> extract
     branch >> finish
-    dbt_job = dbt_build >> gold_layer_build
-    extract >> dbt_job
+    extract >> dbt_build
+    dbt_build >> gold_layer_build
 
 
     
