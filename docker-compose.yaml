@@ -26,8 +26,8 @@ services:
     image: postgres:16
     container_name: airflow_db
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
+      POSTGRES_USER: ${AIRFLOW_USER}
+      POSTGRES_PASSWORD: ${AIRFLOW_PASSWORD}
       POSTGRES_DB: airflow
     volumes:
       - postgres-airflow-data:/var/lib/postgresql/data
@@ -42,8 +42,8 @@ services:
     image: postgres:16
     container_name: postgres_data_warehouse
     environment:
-      POSTGRES_USER: postgresadmin
-      POSTGRES_PASSWORD: postgresadmin
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: f1_dw
     ports:
       - "5433:5432"
@@ -61,8 +61,8 @@ services:
     container_name: minio
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
     ports:
       - "9000:9000"
       - "9001:9001"
