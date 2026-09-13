@@ -57,7 +57,7 @@ services:
       start_period: 5s
     restart: always
   minio:
-    image: minio/minio
+    image: quay.io/minio/minio:latest
     container_name: minio
     command: server /data --console-address ":9001"
     environment:
