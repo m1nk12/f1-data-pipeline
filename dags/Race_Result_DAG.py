@@ -8,6 +8,7 @@ from data_model.bronze import Race_result
 from airflow.operators.bash import BashOperator
 from airflow.decorators import dag, task
 from airflow.models.param import Param
+from airflow.exceptions import AirflowSkipException
 
 from sqlalchemy import create_engine
 import pandas as pd
@@ -38,9 +39,9 @@ def get_race_result():
     def check_race():
         sql = "SELECT season, round " \
                 "FROM gold.dim_races " \
-                "WHERE (date + time) " \
-                "BETWEEN (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '24 hours' " \
-                "AND (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '4 hours'"
+                "WHERE date(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') <= date + 1 " \
+                "AND (date + time) > (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Ho_Chi_Minh') - INTERVAL '24 hours' "\
+                "ORDER BY date + time ASC LIMIT 1"
         
         df = pd.read_sql(sql,con = engine)
         if(df.empty):
@@ -59,6 +60,9 @@ def get_race_result():
         round = race["round"]
 
         df = fetch_race_result_data(season, round)
+
+        if df.empty:
+            raise AirflowSkipException("No data, skipping")
 
         records = df.to_dict(orient='records')
         validated = [Race_result.model_validate(record).model_dump() for record in records]

@@ -22,7 +22,8 @@ def fetch_race_result_data(season: int, round: int) -> pd.DataFrame:
     data = client.get_results(season,round)
 
     races = data["MRData"]["RaceTable"]["Races"]
-
+    if(len(races) == 0):
+        return pd.DataFrame()
     records = []
 
 
