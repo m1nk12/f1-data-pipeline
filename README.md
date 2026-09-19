@@ -19,7 +19,7 @@ Pipeline is divided into multiple DAGs following the Medallion Architecture (Bro
 consists of 3 independent ingestion DAGs.
 #### 1. Season Initialization DAG
 This DAG is executed at the beginning of each Formula 1 season or triggered manual when there is changed in season data
-It contains 4 independent tasks that can run in parallel :
+It contains 3 independent tasks that can run in parallel:
 - **Fetch drivers**
     - Retrieve driver information from Jolpica API.
     - Convert the data to parquet format.
@@ -32,8 +32,20 @@ It contains 4 independent tasks that can run in parallel :
     - Retrieve races metadata for the season.
     - Convert the data to parquet format.
     - Upload the Parquet file to Bronze bucket.
-- **Fetch Race schedule**
-    - Retrieve official race schedule.
-    - Convert the data to parquet format.
-    - Upload the Parquet file to Bronze bucket.
-#### 2 more DAG in developement
+#### 2. Race result DAG
+This DAG will check race result and fetch result data about position, points gain or fastest lap time
+
+## How to run project
+- **Prerequisites**
+    - install [docker desktop](https://docs.docker.com/desktop/setup/install/windows-install/) and python
+- **how to run**
+    - open cmd and change directory to project folder
+    - run
+        ```
+        docker compose up --build
+        ```
+    - open web browser and access airflow webserver by searching
+        ```
+        http://localhost:8080/
+        ```
+    - manually run the season init DAG and input the current season
