@@ -71,11 +71,8 @@ class Race_result(BaseModel):
     race_name: str
     race_date: datetime.date
     driver_id: str
-    driver_code: str
-    driver_number: int
-    driver_name: str
+    driver_number: int | None # some reserve drivers don't have code 
     constructor_id: str
-    constructor_name: str
     grid: int | None
     position: str
     points: float

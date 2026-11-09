@@ -47,12 +47,9 @@ def fetch_race_result_data(season: int, round: int) -> pd.DataFrame:
                 "race_date": race_date,
 
                 "driver_id": driver.get("driverId"),
-                "driver_code": driver.get("code"),
                 "driver_number": driver.get("permanentNumber"),
-                "driver_name": f"{driver.get('givenName')} {driver.get('familyName')}",
 
                 "constructor_id": constructor.get("constructorId"),
-                "constructor_name": constructor.get("name"),
 
                 "grid": result["grid"],
                 "position": str(result["position"]),
